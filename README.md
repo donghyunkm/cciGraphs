@@ -5,15 +5,32 @@ Peptidergic communication networks in spatial transcriptomic data can be viewed 
 
 
 ### Environment Setup
-```
+
+For PyG `2.5.1`:
+
+```bash
 conda create -n cci python=3.9
-conda install pytorch torchvision torchaudio cpuonly -c pytorch
-pip install jupyterlab scikit-learn seaborn
-conda install pyg -c pyg
-conda install -c conda-forge scanpy python-igraph leidenalg
 
-pip install -e . 
-# Minimal python packaging for local development 
-# https://github.com/rhngla/minpypack 
+# order of installations is important: https://github.com/pyg-team/pytorch_geometric/discussions/7866#discussioncomment-7970609
+conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 cpuonly -c pytorch
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cpu.html
+pip install torch_geometric
 
+# other dependencies
+pip install jupyterlab scikit-learn pandas matplotlib seaborn
+pip install ipywidgets rich tqdm timebudget toml
+pip install 'scanpy[leiden]'
+
+# installs package from local directory for development.
+# see https://github.com/rhngla/minpypack 
+pip install -e .
+```
+
+For PyG `2.5.3`
+
+```bash
+conda create n cci python=3.12
+conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 -c pytorch
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.3.0+cpu.html
+pip install torch_geometric
 ```
