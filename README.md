@@ -19,6 +19,11 @@ pip install torch_geometric
 # installs package from local directory and other dependencies.
 # see https://github.com/rhngla/minpypack 
 pip install -e .
+
+# one time install and manual run of pre commit
+pip install pre-commit
+pre-commit install
+pre-commit run --all-files
 ```
 
 
