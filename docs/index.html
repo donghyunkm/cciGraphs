@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Donghyun Kim, Rohan Gala">
 
-<title>qdocs – Methods to analyze peptidergic communication networks</title>
+<title>qdocs – Methods for analysis of spatial peptidergic communication networks</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -191,8 +192,17 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#background-on-spatial-transcriptomic-data" id="toc-background-on-spatial-transcriptomic-data" class="nav-link active" data-scroll-target="#background-on-spatial-transcriptomic-data">Background on spatial transcriptomic data</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#background-on-spatial-transcriptomic-data" id="toc-background-on-spatial-transcriptomic-data" class="nav-link" data-scroll-target="#background-on-spatial-transcriptomic-data">Background on spatial transcriptomic data</a></li>
   <li><a href="#background-on-neuropeptidergic-communication" id="toc-background-on-neuropeptidergic-communication" class="nav-link" data-scroll-target="#background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</a></li>
+  <li><a href="#multilayer-graph-construction" id="toc-multilayer-graph-construction" class="nav-link" data-scroll-target="#multilayer-graph-construction">Multilayer graph construction</a></li>
+  <li><a href="#node-classification-with-graph-neural-networks" id="toc-node-classification-with-graph-neural-networks" class="nav-link" data-scroll-target="#node-classification-with-graph-neural-networks">Node classification with graph neural networks</a></li>
+  <li><a href="#node-embeddings" id="toc-node-embeddings" class="nav-link" data-scroll-target="#node-embeddings">Node embeddings</a></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a></li>
+  <li><a href="#multilayer-graph-clustering" id="toc-multilayer-graph-clustering" class="nav-link" data-scroll-target="#multilayer-graph-clustering">Multilayer graph clustering</a></li>
+  <li><a href="#application-to-merfish-visp-data" id="toc-application-to-merfish-visp-data" class="nav-link" data-scroll-target="#application-to-merfish-visp-data">Application to MERFISH VISp data</a></li>
+  <li><a href="#gene-imputation" id="toc-gene-imputation" class="nav-link" data-scroll-target="#gene-imputation">Gene Imputation</a></li>
+  <li><a href="#limitations-and-future-work" id="toc-limitations-and-future-work" class="nav-link" data-scroll-target="#limitations-and-future-work">Limitations and future work</a></li>
   <li><a href="#application-of-gnns-for-analysis-of-spatial-transcriptomic-data" id="toc-application-of-gnns-for-analysis-of-spatial-transcriptomic-data" class="nav-link" data-scroll-target="#application-of-gnns-for-analysis-of-spatial-transcriptomic-data">Application of GNNs for analysis of spatial transcriptomic data</a></li>
   </ul>
 </nav>
@@ -202,13 +212,19 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Methods to analyze peptidergic communication networks</h1>
+<h1 class="title">Methods for analysis of spatial peptidergic communication networks</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Donghyun Kim, Rohan Gala </p>
+          </div>
+  </div>
     
   
     
@@ -229,16 +245,106 @@ Figure&nbsp;1: Describe what peptidergic networks are.
 </figcaption>
 </figure>
 </div>
+<p>Communication in the brain occurs in 2 main ways: wired communication and wireless communication.</p>
+<p>Wired communication occurs across a synapse (between dendrite and axon) with electrical and chemical signals.</p>
+<p>Wireless communication occurs pairs of cells that diffuse neuropeptides and cells that bind to these neuropeptides. 37 such pairs have been identified in literature and each pair constitutes a distinct communication network between neurons.</p>
+<p>In this study, we develop computational methods to study the organization of these graphs.</p>
+<p>ASSUMPTION: - POINT NEURONS</p>
+<section id="introduction" class="level3">
+<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
+<p>Peptides released by one neuron can bind to G-protein coupled receptors (GPCRs) on other neurons and modulate their activity. Many such cognate neuropeptide- GPCR pairs have been identified in the literature. These constitute multiple molecularly distinct communication networks between neurons. Single cell transcriptomic data suggests that a vast majority of cortical neurons participate in such communication in a cell-type dependent manner<span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>.</p>
+<p>Spatial transcriptomic experiments measure gene expression while preserving context within the tissue. We consider a recent whole mouse brain dataset obtained with an in-situ hybridization-based technique called MERFISH <span class="citation" data-cites="yao2023wholebrain">(<a href="#ref-yao2023wholebrain" role="doc-biblioref">Yao et al. 2023</a>)</span> and develop graph-based methods to study the organization of putative peptidergic communication networks.</p>
+<p>We explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks and adapt Node2Vec <span class="citation" data-cites="grover2016node2vec">(<a href="#ref-grover2016node2vec" role="doc-biblioref">Grover and Leskovec 2016</a>)</span> to obtain multilayer graph embeddings. We speculate that cell clusters obtained in this way correspond to spatial domains relevant from a functional point of view.</p>
+</section>
 <section id="background-on-spatial-transcriptomic-data" class="level3">
 <h3 class="anchored" data-anchor-id="background-on-spatial-transcriptomic-data">Background on spatial transcriptomic data</h3>
 <p>Spatial transcriptomic experiments measure gene expression while preserving spatial context. There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample <span class="citation" data-cites="lein2017promise">Chen et al. (<a href="#ref-chen2023spacetxtech" role="doc-biblioref">2023</a>)</span>. Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN~<span class="citation" data-cites="hawrylycz2023guide">Hawrylycz et al. (<a href="#ref-hawrylycz2023guide" role="doc-biblioref">2023</a>)</span>. Here we focus on a whole mouse brain dataset obtained with an in-situ hybridization based technique called MERFISH <span class="citation" data-cites="yao2023wholebrain">Yao et al. (<a href="#ref-yao2023wholebrain" role="doc-biblioref">2023</a>)</span>. This dataset consists of expression measurements of approximately 500 genes in 4 million cells from a single mouse brain.</p>
+<p>We focus on the VISp region in this study as shown in <a href="#fig-spatial-data" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<div id="fig-spatial-data" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-spatial-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="spatial.png" class="img-fluid figure-img" width="800">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spatial-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Spatial Transcriptomic data from VISp.
+</figcaption>
+</figure>
+</div>
 </section>
 <section id="background-on-neuropeptidergic-communication" class="level3">
 <h3 class="anchored" data-anchor-id="background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</h3>
 <p>Ligands are small molecules that bind selectively to receptor proteins. Peptides are small chains of amino acids. Here the ligands of interest are peptides, and the receptor proteins of interest are GPCRs <span class="citation" data-cites="rosenbaum2009GPCRreview">Rosenbaum, Rasmussen, and Kobilka (<a href="#ref-rosenbaum2009GPCRreview" role="doc-biblioref">2009</a>)</span>. Peptides released by one neuron can bind to GPCRs on other neurons and modulate their activity. Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as unique communication channels <span class="citation" data-cites="smith2019peptidergic">Smith et al. (<a href="#ref-smith2019peptidergic" role="doc-biblioref">2019</a>)</span>. ~ Importantly, such peptidergic signaling is slower and longer lasting compared to synaptic signaling. Recently neurons have been grouped into based on genome-wide mRNA expression (<span class="math inline">\(\sim\)</span> 20,000 unique genes per cell). Combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle <span class="citation" data-cites="liu2021credit_assignment">Liu et al. (<a href="#ref-liu2021credit_assignment" role="doc-biblioref">2021</a>)</span>.</p>
+</section>
+<section id="multilayer-graph-construction" class="level3">
+<h3 class="anchored" data-anchor-id="multilayer-graph-construction">Multilayer graph construction</h3>
+<p>Peptidergic Communication networks are directed multilayer graphs.</p>
+<p>The multilayer graph G is the set <span class="math inline">\(\{V, \{E_l\}\}\)</span> where:</p>
+<p><span class="math inline">\(V\)</span> is the set of vertices (cells).</p>
+<p><span class="math inline">\(E_l\)</span> s the set of directed edges for the lth network.</p>
+<p>For the <span class="math inline">\(l\)</span> th network, an edge exists from vertex <span class="math inline">\(i\)</span> to vertex <span class="math inline">\(j\)</span> if all the following conditions are met:</p>
+<ol type="1">
+<li>distance <span class="math inline">\(d[i,j] \leq d_{threshold}\)</span></li>
+<li>vertex i expresses the peptide precursor gene</li>
+<li>vertex j expresses the GPCR gene</li>
+</ol>
+<p>We set <span class="math inline">\(d_{threshold} = 40 \textmu m\)</span> for all experiments unless mentioned otherwise.</p>
+</section>
+<section id="node-classification-with-graph-neural-networks" class="level3">
+<h3 class="anchored" data-anchor-id="node-classification-with-graph-neural-networks">Node classification with graph neural networks</h3>
+<p>Graph neural networks combine features of nodes that are adjacent according to the underlying graph.</p>
+<p>A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation.</p>
+<p>In GATv2, the node features are weighted using a function of node pairs, <span class="math inline">\(\theta\)</span>.</p>
+<p>Functions <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are learned to optimize a per-node classification objective.</p>
+<p>Here, we consider cells as nodes, and their gene expression as initial node features.</p>
+<p>Supertype classification is challenging when few genes are available.</p>
+<p>We find that gene expression in neighboring cells can improve classification in this regime.</p>
+</section>
+<section id="node-embeddings" class="level3">
+<h3 class="anchored" data-anchor-id="node-embeddings">Node embeddings</h3>
+<p>Node2Vec learns an embedding <span class="math inline">\(f(u)\)</span> that is predictive of the neighborhood <span class="math inline">\(\mathcal{N}(u)\)</span> of each node <span class="math inline">\(u\)</span>.</p>
+<p>The neighborhood for each node is determined through fixed length, 2nd order random walks starting from each node.</p>
+<p>Parameters <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> determine the transition probabilities for the random walk.</p>
 <p><span class="math display">\[
-\mathcal{L} = \sum_{u \in V}{P(\mathcal{N}(u) | f(u))}
+max_f \sum_{u \in V}{P(\mathcal{N}(u) | f(u))}
 \]</span></p>
+<p>Spectral clustering frames the problem as an eigen decomposition. Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.</p>
+</section>
+<section id="simulation" class="level3">
+<h3 class="anchored" data-anchor-id="simulation">Simulation</h3>
+<p>We build intuition for how peptidergic connectivity could partition cells into meaningful groups even in the absence of explicit gene expression information with a toy problem.</p>
+<p>The type x type adjacency matrix can be sampled to obtain a cell x cell adjacency matrix. The block structure is equivalent to the graph having distinct connected components.</p>
+<p>Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components.</p>
+</section>
+<section id="multilayer-graph-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="multilayer-graph-clustering">Multilayer graph clustering</h3>
+<p>Node2Vec embeddings cluster according to the underlying block structure in a manner that is robust to sparsity as well as noise in the cell x cell graph.</p>
+<p>For multilayer graphs, one approach is to obtain independent embeddings for each layer in the multigraph. This approach can identify all the ‘types’ when the blocks are chosen carefully across layers</p>
+<p>The peptidergic multilayer graph does not contain any edges between layers. We can exploit this fact to jointly consider all the layers of the graph, and efficiently construct random walks from each layer.</p>
+</section>
+<section id="application-to-merfish-visp-data" class="level3">
+<h3 class="anchored" data-anchor-id="application-to-merfish-visp-data">Application to MERFISH VISp data</h3>
+<p>We inspect the utility of graph embeddings in identifying celltypes (subclass) and spatial groupings in a few different settings:</p>
+<ol type="1">
+<li>considering only proximity of cells in the graph (distance)</li>
+<li>concatenated embeddings of individual peptidergic graphs (independent)</li>
+<li>collapsing the multi-layer graphs into a single layer graph (squashed)</li>
+<li>jointly considering the multilayer graphs with an adapted Node2Vec model (joint)</li>
+</ol>
+</section>
+<section id="gene-imputation" class="level3">
+<h3 class="anchored" data-anchor-id="gene-imputation">Gene Imputation</h3>
+<p>The expression of peptidergic communication genes that were not part of the MERFISH dataset can be recovered through imputation. Several tools have been benchmarked for this task ~, and we used the top performing model Tangram to impute values of all peptidergic communication genes.</p>
+<p>Tangram maps cells from a scRNA-seq dataset to cells (or voxels) from a spatial transcriptomic dataset.</p>
+<p>Tangram learns a mapping matrix M defined such that <span class="math inline">\(M_{ij} \geq 0\)</span> is the probability of cell i (from scRNA-seq) mapping to cell <span class="math inline">\(j\)</span> (from spatial transcriptomic data).</p>
+<p>We assessed imputation performance by using peptidergic communication genes that were already measured as test data.</p>
+<p>We conclude that the correlation between predicted gene expression and actual gene expression is not strong enough for us to use predicted values for the 14 other peptidergic communication gene pairs.</p>
+<p>In particular, a non trivial amount of null gene expression values were mapped to positive values for most genes.</p>
+<p>We attribute this to the relatively small number of cells present in the spatial transcriptomic data after subsetting.</p>
+</section>
+<section id="limitations-and-future-work" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-and-future-work">Limitations and future work</h3>
+<p>Only 5 out of the 37 cognate neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset, which precludes an assessment at more detailed levels of the taxonomy</p>
+<p>Neuron morphology may be an important consideration relevant for the full spatial extent of peptidergic communication. Arbor density representations derived from patch-seq datasets could offer a way forward.</p>
 </section>
 <section id="application-of-gnns-for-analysis-of-spatial-transcriptomic-data" class="level3">
 <h3 class="anchored" data-anchor-id="application-of-gnns-for-analysis-of-spatial-transcriptomic-data">Application of GNNs for analysis of spatial transcriptomic data</h3>
@@ -247,6 +353,7 @@ Figure&nbsp;1: Describe what peptidergic networks are.
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><strong>SpaGCN</strong>~<span class="citation" data-cites="hu2021spagcn">(<a href="#ref-hu2021spagcn" role="doc-biblioref">Hu et al. 2021</a>)</span>: This approach uses gene expression, spatial location, and a histology image to construct a graph. Nodes are either cells (MERFISH data), or spots (10x Visium data). Edge weights capture proximity in spatial coordinates and similarity of RGB values in the histology image. A GCN layer <span class="citation" data-cites="kipf2016semi">Kipf and Welling (<a href="#ref-kipf2016semi" role="doc-biblioref">2016</a>)</span> provides node embeddings that are clustered by a differentiable clustering layer <span class="citation" data-cites="xie2015deepcluster">Xie, Girshick, and Farhadi (<a href="#ref-xie2015deepcluster" role="doc-biblioref">2015</a>)</span>. These layers are trained jointly to optimize a clustering objective <span class="citation" data-cites="xie2015deepcluster">Xie, Girshick, and Farhadi (<a href="#ref-xie2015deepcluster" role="doc-biblioref">2015</a>)</span>. The resulting node clusters are interpreted as domains. A separate differential gene analysis is performed to obtain across domains.</p>
+<p>We thank Tom Chartrand, Ian Convy, Olga Gliko, Anna Grim, Yeganeh Marghi, Uygar Sümbül, Meghan Turner, and Kasey Zhang for helpful feedback and discussions.</p>
 
 
 
@@ -255,6 +362,9 @@ Figure&nbsp;1: Describe what peptidergic networks are.
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-chen2023spacetxtech" class="csl-entry" role="listitem">
 Chen, Tsai-Ying, Li You, Jose Angelito U Hardillo, and Miao-Ping Chien. 2023. <span>“Spatial Transcriptomic Technologies.”</span> <em>Cells</em> 12 (16): 2042.
+</div>
+<div id="ref-grover2016node2vec" class="csl-entry" role="listitem">
+Grover, Aditya, and Jure Leskovec. 2016. <span>“Node2vec: Scalable Feature Learning for Networks.”</span> In <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 855–64.
 </div>
 <div id="ref-hawrylycz2023guide" class="csl-entry" role="listitem">
 Hawrylycz, Michael, Maryann E Martone, Giorgio A Ascoli, Jan G Bjaalie, Hong-Wei Dong, Satrajit S Ghosh, Jesse Gillis, et al. 2023. <span>“A Guide to the BRAIN Initiative Cell Census Network Data Ecosystem.”</span> <em>PLoS Biology</em> 21 (6): e3002133.
