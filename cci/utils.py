@@ -1,26 +1,24 @@
+from collections import defaultdict
+
 import anndata as ad
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 import toml
-
+from sklearn import linear_model
 from sklearn.dummy import DummyClassifier
 from sklearn.manifold import TSNE
-from sklearn.model_selection import train_test_split
-from sklearn import linear_model
 from sklearn.metrics import (
     accuracy_score,
+    classification_report,
+    confusion_matrix,
     mean_squared_error,
     r2_score,
-    confusion_matrix,
-    classification_report,
 )
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
-
-from collections import defaultdict
-import numpy as np
 
 ligands = [
     ["Npy"],

@@ -1,13 +1,15 @@
-from pathlib import Path
-import warnings
-import numpy as np
-from torch_geometric.data import Data
 import pickle
+import warnings
+from pathlib import Path
+
+import numpy as np
+from anndata import ImplicitModificationWarning
 from scipy.sparse import csr_array
 from sklearn.model_selection import StratifiedKFold
+from torch_geometric.data import Data
 from torch_geometric.utils import from_scipy_sparse_matrix
+
 from cci.utils import get_adata
-from anndata import ImplicitModificationWarning
 
 warnings.filterwarnings("ignore", category=ImplicitModificationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)

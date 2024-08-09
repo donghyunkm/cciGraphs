@@ -1,6 +1,6 @@
 import torch
-from torch_geometric.nn import GCNConv, GATv2Conv
 import torch.nn.functional as F
+from torch_geometric.nn import GATv2Conv, GCNConv
 
 
 class GCNnet(torch.nn.Module):

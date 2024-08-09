@@ -6,7 +6,6 @@ import torch
 from torch import Tensor
 from torch.nn import Embedding
 from torch.utils.data import DataLoader
-
 from torch_geometric.typing import WITH_PYG_LIB, WITH_TORCH_CLUSTER
 from torch_geometric.utils import sort_edge_index
 from torch_geometric.utils.sparse import index2ptr
@@ -56,7 +55,7 @@ class MultilayerNode2Vec(torch.nn.Module):
         p: float = 1.0,
         q: float = 1.0,
         num_negative_samples_per_layer: int = 1,
-        num_nodes: int = None,
+        num_nodes: Optional[int] = None,
         sparse: bool = False,
         **kwargs,
     ):
