@@ -1,6 +1,6 @@
 ---
 title: "Methods for analysis of spatial peptidergic communication networks"
-author: "Donghyun Kim, Rohan Gala"
+author: "Donghyun Kim"
 bibliography: refs.bib
 ---
 ::: {#fig-peptide-networks}
