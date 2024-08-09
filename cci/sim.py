@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
 
+
 class Interactions:
     """Class to generate adjacency matrices for testing."""
 
-    def __init__(self, n_labels=8, n_blocks_per_graph=2, n_nodes_per_label=10, n_channels=3, labels=None, seed = 0):
+    def __init__(self, n_labels=8, n_blocks_per_graph=2, n_nodes_per_label=10, n_channels=3, labels=None, seed=0):
         self.n_labels = n_labels
         self.n_blocks_per_graph = n_blocks_per_graph
         self.n_nodes_per_label = n_nodes_per_label
@@ -62,7 +63,7 @@ class Interactions:
         """
         if not block_members:
             block_members = self.get_block_members()
-            
+
         adj_df = pd.DataFrame(np.zeros((self.n_labels, self.n_labels)), index=self.labels, columns=self.labels)
         for b in block_members:
             for i in range(len(block_members[b])):
@@ -89,7 +90,7 @@ class Interactions:
 
     def get_node_labels(self):
         """Generates a list of node labels.
-        
+
         Returns:
             node_labels: list of node labels
         """
@@ -101,19 +102,19 @@ class Interactions:
 
     def get_block_labels(self, blocks_per_channel):
         """Generates a list of block labels for each node.
-        
+
         Returns:
             block_labels: list of block labels for each node
         """
         block_labels = []
 
-        for label in ([chr(i) for i in range(97, 97 + self.n_labels)]):
+        for label in [chr(i) for i in range(97, 97 + self.n_labels)]:
             if label in blocks_per_channel[0]:
                 block_labels = block_labels + self.n_nodes_per_label * [0]
             else:
                 block_labels = block_labels + self.n_nodes_per_label * [1]
 
-        return block_labels    
+        return block_labels
 
     def get_sample_adj(self, adj_df):
         """Generates adjacency matrix (node x node) for a list of node labels
@@ -133,4 +134,3 @@ class Interactions:
             for j, label_j in enumerate(node_labels):
                 adj[i, j] = adj_df.loc[label_i[0], label_j[0]]
         return node_labels, adj
-

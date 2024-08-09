@@ -8,6 +8,7 @@ from sklearn.model_selection import StratifiedKFold
 from torch_geometric.utils import from_scipy_sparse_matrix
 from cci.utils import get_adata
 from anndata import ImplicitModificationWarning
+
 warnings.filterwarnings("ignore", category=ImplicitModificationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -24,10 +25,9 @@ def dataset_application_poster(case=None):
         case (str): "squashed", "independent", "joint" or "distance".
     """
 
-
     adata = get_adata("VISp")
 
-    #print(adata.obs[["brain_section_label", "z_section"]].sort_values("z_section").value_counts().to_frame().head(4))
+    # print(adata.obs[["brain_section_label", "z_section"]].sort_values("z_section").value_counts().to_frame().head(4))
     one_sec = adata[adata.obs["z_section"] == 5.0, :]
     subclass_color_dict = one_sec.obs[["subclass_color", "subclass"]].drop_duplicates()
     subclass_color_dict = subclass_color_dict.set_index("subclass").to_dict()["subclass_color"]
@@ -64,7 +64,6 @@ def dataset_application_poster(case=None):
         df["R"] = (df["R"] > graph_hparams["R_thr"]).astype(bool)
 
         A = df["L"].values.reshape(-1, 1) @ df["R"].values.reshape(1, -1)
-        
 
         # cells are connected only if within distance d
         A[D > graph_hparams["d"]] = 0
@@ -78,12 +77,12 @@ def dataset_application_poster(case=None):
         graph_hparams["n_layers"] = 1
         edge_index_list = [None] * graph_hparams["n_layers"]
         edge_index_list[0], _ = from_scipy_sparse_matrix(csr_array(A))
-        
+
     if case == "squashed":
         # edge values are only allowed to be 0 or 1, not the sum of all layers (as in a multigraph)
         A = np.zeros((graph_hparams["num_nodes"], graph_hparams["num_nodes"])).astype(bool)
         for i in range(graph_hparams["n_layers"]):
-            A = A + A_csr[i].toarray() # A_csr[i].toarray() is a boolean matrix
+            A = A + A_csr[i].toarray()  # A_csr[i].toarray() is a boolean matrix
 
         # overwrite layer count only after individual graphs have been consumed.
         graph_hparams["n_layers"] = 1
@@ -93,11 +92,11 @@ def dataset_application_poster(case=None):
     elif case == "independent":
         for i in range(graph_hparams["n_layers"]):
             edge_index_list[i], _ = from_scipy_sparse_matrix(A_csr[i])
-            
+
     elif case == "joint":
         for i in range(graph_hparams["n_layers"]):
             edge_index_list[i], _ = from_scipy_sparse_matrix(A_csr[i])
-        graph_hparams["n_layers"] = 1 
+        graph_hparams["n_layers"] = 1
 
     elif case == "distance":
         graph_hparams["n_layers"] = 1
@@ -121,14 +120,20 @@ def dataset_application_poster(case=None):
     return data, df, graph_hparams
 
 
-def save_application_experiment(fname, epoch, z, df, graph_hparams, n2v_params=None, leiden_partitions=None, z_tsne=None):
+def save_application_experiment(
+    fname, epoch, z, df, graph_hparams, n2v_params=None, leiden_partitions=None, z_tsne=None
+):
     path = Path("/allen/programs/celltypes/workgroups/mousecelltypes/Donghyun/cciGraphs/data/application/")
     path = Path(path)
     path.mkdir(parents=True, exist_ok=True)
-    savedict = {"z": z, "df": df, 
-                "graph_hparams": graph_hparams, 
-                "n2v_params":n2v_params,
-                "leiden_partitions": leiden_partitions, "z_tsne": z_tsne}
+    savedict = {
+        "z": z,
+        "df": df,
+        "graph_hparams": graph_hparams,
+        "n2v_params": n2v_params,
+        "leiden_partitions": leiden_partitions,
+        "z_tsne": z_tsne,
+    }
     with open(path / fname, "wb") as f:
         pickle.dump(savedict, f)
     return
@@ -138,4 +143,4 @@ def load_application_experiment(fname):
     path = Path("/allen/programs/celltypes/workgroups/mousecelltypes/Donghyun/cciGraphs/data/application/")
     with open(path / fname, "rb") as f:
         data = pickle.load(f)
-    return data    
+    return data

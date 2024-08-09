@@ -1,4 +1,4 @@
-# Warning: This is compatible with torch_geometric 2.5.1. Will need to adapt this for later versions. 
+# Warning: This is compatible with torch_geometric 2.5.1. Will need to adapt this for later versions.
 
 from typing import List, Optional, Tuple, Union
 
@@ -12,7 +12,7 @@ from torch_geometric.utils import sort_edge_index
 from torch_geometric.utils.sparse import index2ptr
 
 
-class MultilayerNode2Vec(torch.nn.Module): 
+class MultilayerNode2Vec(torch.nn.Module):
     r"""The Node2Vec model from the
     `"node2vec: Scalable Feature Learning for Networks"
     <https://arxiv.org/abs/1607.00653>`_ paper where random walks of
@@ -26,7 +26,7 @@ class MultilayerNode2Vec(torch.nn.Module):
         node2vec.py>`_.
 
     Args:
-        edge_index_list (list): Each item in the list should be a Tensor, 
+        edge_index_list (list): Each item in the list should be a Tensor,
             corresponding to edge_index one layer in a multilayer graph.
         embedding_dim (int): The size of each embedding vector.
         walk_length (int): The walk length.
@@ -76,12 +76,12 @@ class MultilayerNode2Vec(torch.nn.Module):
 
         self.num_nodes = num_nodes
         self.n_layers = len(edge_index_list)
-        row = [None]*self.n_layers
-        col = [None]*self.n_layers
-        self.rowptr = [None]*self.n_layers
-        self.col = [None]*self.n_layers
+        row = [None] * self.n_layers
+        col = [None] * self.n_layers
+        self.rowptr = [None] * self.n_layers
+        self.col = [None] * self.n_layers
 
-        for i in range(self.n_layers):            
+        for i in range(self.n_layers):
             row[i], col[i] = sort_edge_index(edge_index_list[i], num_nodes=self.num_nodes).cpu()
             self.rowptr[i], self.col[i] = index2ptr(row[i], self.num_nodes), col[i]
 
@@ -116,14 +116,14 @@ class MultilayerNode2Vec(torch.nn.Module):
     def pos_sample(self, batch: Tensor) -> Tensor:
         batch = batch.repeat(self.walks_per_node)
 
-        rw_ = [None]*self.n_layers
+        rw_ = [None] * self.n_layers
         for i in range(self.n_layers):
             rw = self.random_walk_fn(self.rowptr[i], self.col[i], batch, self.walk_length, self.p, self.q)
-            
+
             if not isinstance(rw, Tensor):
                 rw = rw[0]
             rw_[i] = rw
-        
+
         rw = torch.cat(rw_, dim=0)
 
         walks = []
@@ -191,7 +191,8 @@ class MultilayerNode2Vec(torch.nn.Module):
         from sklearn.linear_model import LogisticRegression
 
         clf = LogisticRegression(solver=solver, *args, **kwargs).fit(
-            train_z.detach().cpu().numpy(), train_y.detach().cpu().numpy())
+            train_z.detach().cpu().numpy(), train_y.detach().cpu().numpy()
+        )
         return clf.score(test_z.detach().cpu().numpy(), test_y.detach().cpu().numpy())
 
     def __repr__(self) -> str:

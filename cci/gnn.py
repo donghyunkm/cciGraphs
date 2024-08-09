@@ -2,6 +2,7 @@ import torch
 from torch_geometric.nn import GCNConv, GATv2Conv
 import torch.nn.functional as F
 
+
 class GCNnet(torch.nn.Module):
     def __init__(self, hidden_channels, num_features, num_classes):
         super().__init__()
@@ -31,6 +32,7 @@ class GATnet(torch.nn.Module):
         x = self.conv2(x, edge_index)
         return x
 
+
 def train_gnn(model, optimizer, data, criterion):
     model.train()
     optimizer.zero_grad()  # Clear gradients.
@@ -47,12 +49,8 @@ def val_gnn(model, data):
     model.eval()
     out = model(data.x, data.edge_index)
     pred = out.argmax(dim=1)  # Use the class with highest probability.
-    val_correct = (
-        pred[data.val_mask] == data.y[data.val_mask]
-    )  # Check against ground-truth labels.
-    val_acc = int(val_correct.sum()) / int(
-        data.val_mask.sum()
-    )  # Derive ratio of correct predictions.
+    val_correct = pred[data.val_mask] == data.y[data.val_mask]  # Check against ground-truth labels.
+    val_acc = int(val_correct.sum()) / int(data.val_mask.sum())  # Derive ratio of correct predictions.
     return val_acc
 
 
@@ -60,11 +58,6 @@ def test_gnn(model, data):
     model.eval()
     out = model(data.x, data.edge_index)
     pred = out.argmax(dim=1)  # Use the class with highest probability.
-    test_correct = (
-        pred[data.test_mask] == data.y[data.test_mask]
-    )  # Check against ground-truth labels.
-    test_acc = int(test_correct.sum()) / int(
-        data.test_mask.sum()
-    )  # Derive ratio of correct predictions.
+    test_correct = pred[data.test_mask] == data.y[data.test_mask]  # Check against ground-truth labels.
+    test_acc = int(test_correct.sum()) / int(data.test_mask.sum())  # Derive ratio of correct predictions.
     return test_acc
-

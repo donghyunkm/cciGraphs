@@ -9,34 +9,22 @@ Peptidergic communication networks in spatial transcriptomic data can be viewed 
 For PyG `2.5.1`:
 
 ```bash
-conda create -n cci python=3.9
+conda create -n cci python=3.11
 
-# order of installations is important: https://github.com/pyg-team/pytorch_geometric/discussions/7866#discussioncomment-7970609
+# order of installations is important. See https://github.com/pyg-team/pytorch_geometric/discussions/7866#discussioncomment-7970609
 conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 cpuonly -c pytorch
 pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.1.0+cpu.html
 pip install torch_geometric
 
-# other dependencies
-pip install jupyterlab scikit-learn pandas matplotlib seaborn
-pip install ipywidgets rich tqdm timebudget toml
-pip install 'scanpy[leiden]'
-
-# installs package from local directory for development.
+# installs package from local directory and other dependencies.
 # see https://github.com/rhngla/minpypack 
 pip install -e .
 ```
 
-For PyG `2.5.3`
 
-```bash
-conda create n cci python=3.12
-conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 -c pytorch
-pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.3.0+cpu.html
-pip install torch_geometric
-```
+### Quarto
 
-
-### Quarto instructions
+The main commands are to render and preview the documents. 
 
 ```bash
 quarto render
