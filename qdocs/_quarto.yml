@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: ../docs/
+  image: opengraph.png
+  
+
+website:
+  title: "qdocs"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+editor:
+  render-on-save: true
+
+

@@ -1,0 +1,54 @@
+---
+title: "Methods to analyze peptidergic communication networks"
+bibliography: refs.bib
+---
+::: {#fig-peptide-networks}
+![](pepnet.png){width=800}
+
+Describe what peptidergic networks are.
+:::
+
+
+### Background on spatial transcriptomic data
+
+Spatial transcriptomic experiments measure gene expression while preserving spatial context. 
+There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample [@lein2017promise, @marx2021spacetx, @ortiz2021spatial, @moffitt2022spacetxrev, @chen2023spacetxtech].
+Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN~@hawrylycz2023guide.
+Here we focus on a whole mouse brain dataset obtained with an in-situ hybridization based technique called MERFISH @yao2023wholebrain.
+This dataset consists of expression measurements of approximately 500 genes in 4 million cells from a single mouse brain.
+
+### Background on neuropeptidergic communication
+
+Ligands are small molecules that bind selectively to receptor proteins.
+Peptides are small chains of amino acids.
+Here the ligands of interest are peptides, and the receptor proteins of interest are GPCRs @rosenbaum2009GPCRreview.
+Peptides released by one neuron can bind to GPCRs on other neurons and modulate their activity.
+Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as unique communication channels @smith2019peptidergic. ~
+Importantly, such peptidergic signaling is slower and longer lasting compared to synaptic signaling.
+Recently neurons have been grouped into \textit{cell types} based on genome-wide mRNA expression ($\sim$ 20,000 unique genes per cell).
+Combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons.
+Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle @liu2021credit_assignment.
+
+$$
+\mathcal{L} = \sum_{u \in V}{P(\mathcal{N}(u) | f(u))}
+$$
+
+### Application of GNNs for analysis of spatial transcriptomic data
+
+This section covers recent GNN-based methods described in the literature @fig-peptide-networks.
+
+
+```python
+import numpy as np
+for i in range(1)
+    pass
+```
+
+**SpaGCN**~[@hu2021spagcn]: 
+This approach uses gene expression, spatial location, and a histology image to construct a graph.
+Nodes are either cells (MERFISH data), or spots (10x Visium data).
+Edge weights capture proximity in spatial coordinates and similarity of RGB values in the histology image.
+A GCN layer @kipf2016semi provides node embeddings that are clustered by a differentiable clustering layer @xie2015deepcluster. 
+These layers are trained jointly to optimize a clustering objective @xie2015deepcluster.
+The resulting node clusters are interpreted as domains. 
+A separate differential gene analysis is performed to obtain \textit{spatially varying genes} across domains.
