@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.43">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Donghyun Kim, Rohan Gala">
+<meta name="author" content="Donghyun Kim">
 
-<title>qdocs – Methods for analysis of spatial peptidergic communication networks</title>
+<title>Methods for analysis of spatial peptidergic communication networks – qdocs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -222,7 +222,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Donghyun Kim, Rohan Gala </p>
+             <p>Donghyun Kim </p>
           </div>
   </div>
     
@@ -266,7 +266,18 @@ Figure&nbsp;1: Describe what peptidergic networks are.
 <img src="spatial.png" class="img-fluid figure-img" width="800">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spatial-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Spatial Transcriptomic data from VISp.
+Figure&nbsp;2: A 0.5 mm x 0.5 mm slice of the VISp region. The different colors assigned to cells correspond to different subclasses.
+</figcaption>
+</figure>
+</div>
+<p>We note that the subclass distribution of cells in the dataset is skewed to a select few. This makes subclass classification tasks inherently more difficult.</p>
+<div id="fig-subclass-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-subclass-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="subclass_dist.png" class="img-fluid figure-img" width="800">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-subclass-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Subclass distribution of cells in VISp
 </figcaption>
 </figure>
 </div>
@@ -288,6 +299,17 @@ Figure&nbsp;2: Spatial Transcriptomic data from VISp.
 <li>vertex j expresses the GPCR gene</li>
 </ol>
 <p>We set <span class="math inline">\(d_{threshold} = 40 \textmu m\)</span> for all experiments unless mentioned otherwise.</p>
+<div id="fig-subclass-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-subclass-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="multilayer_graphs.png" class="img-fluid figure-img" width="800">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-subclass-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Multilayer graphs
+</figcaption>
+</figure>
+</div>
+<p>5 neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset. The 5 pairs each make up a layer in the multilayer graph.</p>
 </section>
 <section id="node-classification-with-graph-neural-networks" class="level3">
 <h3 class="anchored" data-anchor-id="node-classification-with-graph-neural-networks">Node classification with graph neural networks</h3>

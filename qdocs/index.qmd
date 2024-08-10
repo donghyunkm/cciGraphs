@@ -43,8 +43,17 @@ We focus on the VISp region in this study as shown in @fig-spatial-data.
 ::: {#fig-spatial-data}
 ![](spatial.png){width=800}
 
-Spatial Transcriptomic data from VISp.
+A 0.5 mm x 0.5 mm slice of the VISp region. The different colors assigned to cells correspond to different subclasses.
 :::
+
+We note that the subclass distribution of cells in the dataset is skewed to a select few. This makes subclass classification tasks inherently more difficult. 
+
+::: {#fig-subclass-dist}
+![](subclass_dist.png){width=800}
+
+Subclass distribution of cells in VISp
+:::
+
 
 
 ### Background on neuropeptidergic communication
@@ -79,6 +88,13 @@ For the $l$ th network, an edge exists from vertex $i$ to vertex $j$ if all the 
 
 We set $d_{threshold} = 40 \textmu m$ for all experiments unless mentioned otherwise. 
 
+::: {#fig-subclass-dist}
+![](multilayer_graphs.png){width=800}
+
+Multilayer graphs
+:::
+
+5 neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset. The 5 pairs each make up a layer in the multilayer graph.
 
 
 
