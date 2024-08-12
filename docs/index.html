@@ -8,7 +8,7 @@
 
 <meta name="author" content="Donghyun Kim">
 
-<title>Methods for analysis of spatial peptidergic communication networks – qdocs</title>
+<title>Methods for analysis of spatial peptidergic communication networks – cciGraphs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -129,7 +129,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">qdocs</span>
+    <span class="navbar-title">cciGraphs</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -139,7 +139,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="https://donghyunkm.github.io/"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -161,7 +161,7 @@ window.Quarto = {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#background-on-spatial-transcriptomic-data" id="toc-background-on-spatial-transcriptomic-data" class="nav-link" data-scroll-target="#background-on-spatial-transcriptomic-data">Background on spatial transcriptomic data</a></li>
   <li><a href="#background-on-neuropeptidergic-communication" id="toc-background-on-neuropeptidergic-communication" class="nav-link" data-scroll-target="#background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</a></li>
-  <li><a href="#neuropeptideergic-communication-as-directed-multilayer-graphs" id="toc-neuropeptideergic-communication-as-directed-multilayer-graphs" class="nav-link" data-scroll-target="#neuropeptideergic-communication-as-directed-multilayer-graphs">Neuropeptideergic communication as directed multilayer graphs</a></li>
+  <li><a href="#neuropeptidergic-communication-as-directed-multilayer-graphs" id="toc-neuropeptidergic-communication-as-directed-multilayer-graphs" class="nav-link" data-scroll-target="#neuropeptidergic-communication-as-directed-multilayer-graphs">Neuropeptidergic communication as directed multilayer graphs</a></li>
   <li><a href="#node-classification-with-graph-neural-networks" id="toc-node-classification-with-graph-neural-networks" class="nav-link" data-scroll-target="#node-classification-with-graph-neural-networks">Node classification with graph neural networks</a></li>
   <li><a href="#node-embeddings" id="toc-node-embeddings" class="nav-link" data-scroll-target="#node-embeddings">Node embeddings</a></li>
   <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a></li>
@@ -251,9 +251,9 @@ Figure&nbsp;3: Subclass distribution of cells in VISp
 <p>Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as unique communication channel <span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>. Importantly, such peptidergic signaling is slower and longer lasting compared to synaptic signaling.</p>
 <p>Combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle <span class="citation" data-cites="liu2021credit_assignment">(<a href="#ref-liu2021credit_assignment" role="doc-biblioref">Liu et al. 2021</a>)</span>.</p>
 </section>
-<section id="neuropeptideergic-communication-as-directed-multilayer-graphs" class="level3">
-<h3 class="anchored" data-anchor-id="neuropeptideergic-communication-as-directed-multilayer-graphs">Neuropeptideergic communication as directed multilayer graphs</h3>
-<p>Peptidergic Communication networks can be viewed as directed multilayer graphs.</p>
+<section id="neuropeptidergic-communication-as-directed-multilayer-graphs" class="level3">
+<h3 class="anchored" data-anchor-id="neuropeptidergic-communication-as-directed-multilayer-graphs">Neuropeptidergic communication as directed multilayer graphs</h3>
+<p>Peptidergic communication networks can be viewed as directed multilayer graphs.</p>
 <p>The multilayer graph G is the set <span class="math inline">\(\{V, \{E_l\}\}\)</span> where:</p>
 <p><span class="math inline">\(V\)</span> is the set of vertices (cells).</p>
 <p><span class="math inline">\(E_l\)</span> s the set of directed edges for the lth network.</p>
@@ -289,9 +289,10 @@ Figure&nbsp;5: Graph attention network overview
 </figcaption>
 </figure>
 </div>
-<p>Graph neural networks combine features of nodes that are adjacent according to the underlying graph <span class="citation" data-cites="brody2021attentive">(<a href="#ref-brody2021attentive" role="doc-biblioref">Brody, Alon, and Yahav 2021</a>)</span>.</p>
+<p>Graph neural networks combine features of nodes that are adjacent according to the underlying graph.</p>
 <p>A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation.</p>
-<p>In GATv2, the node features are weighted using a function of node pairs, <span class="math inline">\(\theta\)</span>. Functions <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are learned to optimize a per-node classification objective.</p>
+<p>In GATv2, the node features are weighted using a function of node pairs, <span class="math inline">\(\theta\)</span> <span class="citation" data-cites="brody2021attentive">(<a href="#ref-brody2021attentive" role="doc-biblioref">Brody, Alon, and Yahav 2021</a>)</span>.</p>
+<p>Functions <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are learned to optimize a per-node classification objective.</p>
 <div id="fig-gnn-results" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gnn-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

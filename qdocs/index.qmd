@@ -61,9 +61,9 @@ Combinatorial expression of neuropeptides and receptors enables local, type spec
 Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle [@liu2021credit_assignment].
 
 
-### Neuropeptideergic communication as directed multilayer graphs 
+### Neuropeptidergic communication as directed multilayer graphs 
 
-Peptidergic Communication networks can be viewed as directed multilayer graphs.
+Peptidergic communication networks can be viewed as directed multilayer graphs.
 
 The multilayer graph G is the set $\{V, \{E_l\}\}$ where:
 
@@ -99,11 +99,13 @@ We first explore regimes in which neighborhood information is helpful for cell t
 Graph attention network overview
 :::
 
-Graph neural networks combine features of nodes that are adjacent according to the underlying graph [@brody2021attentive].
+Graph neural networks combine features of nodes that are adjacent according to the underlying graph.
 
 A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation.
 
-In GATv2, the node features are weighted using a function of node pairs, $\theta$. Functions $\phi$ and $\theta$ are learned to optimize a per-node classification objective.
+In GATv2, the node features are weighted using a function of node pairs, $\theta$ [@brody2021attentive]. 
+
+Functions $\phi$ and $\theta$ are learned to optimize a per-node classification objective.
 
 ::: {#fig-gnn-results}
 ![](gnn_results.png){width=500}
