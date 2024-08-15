@@ -262,6 +262,20 @@ Only 5 out of the 37 cognate neuropeptide precursor and GPCR pairs were experime
 Neuron morphology may be an important consideration relevant for the full spatial extent of peptidergic communication. Arbor density representations derived from patch-seq datasets could offer a way forward. 
 
 \
+
+The poster is attached below.
+
+::: {#fig-poster}
+![](Poster_draft.jpg){width=600}
+
+Poster
+:::
+
+\
+
+Code repository: <https://github.com/donghyunkm/cciGraphs>
+
+
 \
 
 We thank Tom Chartrand, Ian Convy, Olga Gliko, Anna Grim, Yeganeh Marghi, Uygar Sümbül, Meghan Turner, and Kasey Zhang for helpful feedback and discussions.
