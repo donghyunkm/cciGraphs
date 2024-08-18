@@ -173,7 +173,7 @@ window.Quarto = {
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -251,7 +251,7 @@ Figure&nbsp;3: Subclass distribution of cells in VISp
 <p>Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as unique communication channel <span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>. Importantly, such peptidergic signaling is slower and longer lasting compared to synaptic signaling.</p>
 <p>Combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle <span class="citation" data-cites="liu2021credit_assignment">(<a href="#ref-liu2021credit_assignment" role="doc-biblioref">Liu et al. 2021</a>)</span>.</p>
 </section>
-<section id="neuropeptidergic-communication-as-directed-multilayer-graphs" class="level3">
+<section id="neuropeptidergic-communication-as-directed-multilayer-graphs" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="neuropeptidergic-communication-as-directed-multilayer-graphs">Neuropeptidergic communication as directed multilayer graphs</h3>
 <p>Peptidergic communication networks can be viewed as directed multilayer graphs.</p>
 <p>The multilayer graph G is the set <span class="math inline">\(\{V, \{E_l\}\}\)</span> where:</p>
@@ -264,7 +264,10 @@ Figure&nbsp;3: Subclass distribution of cells in VISp
 <li>vertex j expresses the GPCR gene</li>
 </ol>
 <p>We set <span class="math inline">\(d_{threshold} = 40 \textmu m\)</span> for all experiments unless mentioned otherwise.</p>
-<div id="fig-multilayer" class="quarto-float quarto-figure quarto-figure-center anchored">
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Code for graph construction can be found <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/1_exploring_data_graph.ipynb">here</a>.</p>
+</div></div><div id="fig-multilayer" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-multilayer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="multilayer_graphs.png" class="img-fluid figure-img" width="800">
@@ -276,7 +279,7 @@ Figure&nbsp;4: Multilayer graphs
 </div>
 <p>5 neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset. The 5 pairs each make up a layer in the multilayer graph as shown in <a href="#fig-multilayer" class="quarto-xref">Figure&nbsp;4</a>.</p>
 </section>
-<section id="node-classification-with-graph-neural-networks" class="level3">
+<section id="node-classification-with-graph-neural-networks" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="node-classification-with-graph-neural-networks">Node classification with graph neural networks</h3>
 <p>We first explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks.</p>
 <div id="fig-gnn" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -293,7 +296,10 @@ Figure&nbsp;5: Graph attention network overview
 <p>A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation.</p>
 <p>In GATv2, the node features are weighted using a function of node pairs, <span class="math inline">\(\theta\)</span> <span class="citation" data-cites="brody2021attentive">(<a href="#ref-brody2021attentive" role="doc-biblioref">Brody, Alon, and Yahav 2021</a>)</span>.</p>
 <p>Functions <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are learned to optimize a per-node classification objective.</p>
-<div id="fig-gnn-results" class="quarto-float quarto-figure quarto-figure-center anchored">
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Code for node classification with graph neural networks can be found <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/3_revisiting_gnn.ipynb">here</a>.</p>
+</div></div><div id="fig-gnn-results" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gnn-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="gnn_results.png" class="img-fluid figure-img" width="500">
@@ -333,9 +339,9 @@ Figure&nbsp;8: Eigenvectors of the laplacian matrix
 </figcaption>
 </figure>
 </div>
-<p><strong>Spectral clustering</strong> frames the problem as an eigen decomposition <span class="citation" data-cites="von2007tutorial">(<a href="#ref-von2007tutorial" role="doc-biblioref">Von Luxburg 2007</a>)</span>. Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.</p>
+<p><strong>Spectral graph clustering</strong> frames the problem as an eigen decomposition <span class="citation" data-cites="von2007tutorial">(<a href="#ref-von2007tutorial" role="doc-biblioref">Von Luxburg 2007</a>)</span>. Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.</p>
 </section>
-<section id="simulation" class="level3">
+<section id="simulation" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="simulation">Simulation</h3>
 <p>We build intuition for how peptidergic connectivity could partition cells into meaningful groups even in the absence of explicit gene expression information with a toy problem.</p>
 <div id="fig-toy" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -349,7 +355,10 @@ Figure&nbsp;9: Overview of toy problem
 </figure>
 </div>
 <p>We start with a type x type adjaceny matrix that shows which cell types can communicate with which cell types. The type x type adjacency matrix can be sampled to obtain a cell x cell adjacency matrix. The block structure is equivalent to the graph having distinct connected components (as shown on the right).</p>
-<div id="fig-toy_emb" class="quarto-float quarto-figure quarto-figure-center anchored">
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Code for Node2Vec and spectral graph clustering applied to the simulation can be found <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/4_simulations.ipynb">here</a>.</p>
+</div></div><div id="fig-toy_emb" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-toy_emb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="tsne_2.png" class="img-fluid figure-img" width="300">
@@ -359,7 +368,7 @@ Figure&nbsp;10: TSNE projection of Node2Vec embedding
 </figcaption>
 </figure>
 </div>
-<p>Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components.</p>
+<p>Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components. We found that spectral graph clustering can identify these components too. However, spectral graph clustering has limited applicability to our dataset given its computational complexity of <span class="math inline">\(O(n^3)\)</span>.</p>
 <p>Conencting this back to the problem of peptidergic communication, we can think of the dark blue, light blue, red, and green nodes as 4 cell types that communicate with each other, and the yellow, brown, orange, and violet nodes as 4 cell types that communicate with each other.</p>
 <p>This type x type adjacency matrix denotes 1 communication network between the cells or 1 layer in the multilayer graph. With 1 layer, we can distinguish between 2 groups of cells.</p>
 </section>
@@ -398,17 +407,21 @@ Figure&nbsp;11: An embedding is generated from each type x type matrix. The 3 em
 </tbody>
 </table>
 </section>
-<section id="application-to-merfish-visp-data" class="level3">
+<section id="application-to-merfish-visp-data" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="application-to-merfish-visp-data">Application to MERFISH VISp data</h3>
 <p>We inspect the utility of graph embeddings in identifying celltypes (subclass) and spatial groupings in a few different settings.</p>
 <ol type="1">
 <li>considering only proximity of cells in the graph (<strong>distance</strong>)</li>
 <li>concatenated embeddings of individual peptidergic graphs (<strong>independent</strong>)</li>
 <li>collapsing the multi-layer graphs into a single layer graph (<strong>squashed</strong>)</li>
-<li>jointly considering the multilayer graphs with an adapted Node2Vec model (<strong>joint</strong>)</li>
+<li>jointly considering the multilayer graphs with an <strong>adapted</strong> Node2Vec model (<strong>joint</strong>)</li>
 </ol>
-<p>In the joint setting, we sample random walks from all layers to determine the neighborhood for each node (as opposed to neighborhoods constructed from only 1 layer). Note that the peptidergic multilayer graph does not contain any edges between layers.</p>
-<div id="fig-application" class="quarto-float quarto-figure quarto-figure-center anchored">
+<p>In the joint setting, we sample random walks from all layers to determine the neighborhood for each node (as opposed to neighborhoods constructed from only 1 layer).</p>
+<p>Note that the peptidergic multilayer graph does not contain any edges between layers.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Code for <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5a_application%20experiment_distance.ipynb">distance</a>, <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5b_application%20experiment_independent.ipynb">independent</a>, <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5c_application%20experiment_squashed.ipynb">squashed</a>, and <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5d_application%20experiment_joint.ipynb">joint</a>.</p>
+</div></div><div id="fig-application" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-application-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="application.png" class="img-fluid figure-img" width="600">

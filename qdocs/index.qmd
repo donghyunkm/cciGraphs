@@ -80,6 +80,10 @@ For the $l$ th network, an edge exists from vertex $i$ to vertex $j$ if all the 
 
 We set $d_{threshold} = 40 \textmu m$ for all experiments unless mentioned otherwise. 
 
+::: {.column-margin}
+Code for graph construction can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/1_exploring_data_graph.ipynb).
+:::
+
 ::: {#fig-multilayer}
 ![](multilayer_graphs.png){width=800}
 
@@ -106,6 +110,10 @@ A nonlinear function ∅ of aggregated (sum here) weighted node features determi
 In GATv2, the node features are weighted using a function of node pairs, $\theta$ [@brody2021attentive]. 
 
 Functions $\phi$ and $\theta$ are learned to optimize a per-node classification objective.
+
+::: {.column-margin}
+Code for node classification with graph neural networks can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/3_revisiting_gnn.ipynb).
+:::
 
 ::: {#fig-gnn-results}
 ![](gnn_results.png){width=500}
@@ -141,7 +149,7 @@ Parameters $p$ and $q$ determine the transition probabilities for the random wal
 Eigenvectors of the laplacian matrix
 :::
 
-**Spectral clustering** frames the problem as an eigen decomposition [@von2007tutorial]. Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.
+**Spectral graph clustering** frames the problem as an eigen decomposition [@von2007tutorial]. Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.
 
 ### Simulation
 
@@ -155,6 +163,10 @@ Overview of toy problem
 
 We start with a type x type adjaceny matrix that shows which cell types can communicate with which cell types. The type x type adjacency matrix can be sampled to obtain a cell x cell adjacency matrix. The block structure is equivalent to the graph having distinct connected components (as shown on the right).
 
+::: {.column-margin}
+Code for Node2Vec and spectral graph clustering applied to the simulation can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/4_simulations.ipynb).
+:::
+
 ::: {#fig-toy_emb}
 ![](tsne_2.png){width=300}
 
@@ -162,7 +174,7 @@ TSNE projection of Node2Vec embedding
 
 :::
 
-Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components. 
+Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components. We found that spectral graph clustering can identify these components too. However, spectral graph clustering has limited applicability to our dataset given its computational complexity of $O(n^3)$.       
 
 Conencting this back to the problem of peptidergic communication, we can think of the dark blue, light blue, red, and green nodes as 4 cell types that communicate with each other, and the yellow, brown, orange, and violet nodes as 4 cell types that communicate with each other.
 
@@ -207,9 +219,15 @@ We inspect the utility of graph embeddings in identifying celltypes (subclass) a
 1. considering only proximity of cells in the graph (**distance**)
 2. concatenated embeddings of individual peptidergic graphs (**independent**)
 3. collapsing the multi-layer graphs into a single layer graph (**squashed**)
-4. jointly considering the multilayer graphs with an adapted Node2Vec model (**joint**)
+4. jointly considering the multilayer graphs with an **adapted** Node2Vec model (**joint**)
 
-In the joint setting, we sample random walks from all layers to determine the neighborhood for each node (as opposed to neighborhoods constructed from only 1 layer). Note that the peptidergic multilayer graph does not contain any edges between layers.
+In the joint setting, we sample random walks from all layers to determine the neighborhood for each node (as opposed to neighborhoods constructed from only 1 layer). 
+
+Note that the peptidergic multilayer graph does not contain any edges between layers.
+
+::: {.column-margin}
+Code for [distance](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5a_application%20experiment_distance.ipynb), [independent](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5b_application%20experiment_independent.ipynb), [squashed](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5c_application%20experiment_squashed.ipynb), and [joint](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5d_application%20experiment_joint.ipynb).
+:::
 
 ::: {#fig-application}
 ![](application.png){width=600}
