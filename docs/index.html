@@ -158,14 +158,14 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#background-on-neuropeptidergic-communication" id="toc-background-on-neuropeptidergic-communication" class="nav-link active" data-scroll-target="#background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</a></li>
   <li><a href="#background-on-spatial-transcriptomic-data" id="toc-background-on-spatial-transcriptomic-data" class="nav-link" data-scroll-target="#background-on-spatial-transcriptomic-data">Background on spatial transcriptomic data</a></li>
-  <li><a href="#background-on-neuropeptidergic-communication" id="toc-background-on-neuropeptidergic-communication" class="nav-link" data-scroll-target="#background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</a></li>
   <li><a href="#neuropeptidergic-communication-as-directed-multilayer-graphs" id="toc-neuropeptidergic-communication-as-directed-multilayer-graphs" class="nav-link" data-scroll-target="#neuropeptidergic-communication-as-directed-multilayer-graphs">Neuropeptidergic communication as directed multilayer graphs</a></li>
   <li><a href="#node-classification-with-graph-neural-networks" id="toc-node-classification-with-graph-neural-networks" class="nav-link" data-scroll-target="#node-classification-with-graph-neural-networks">Node classification with graph neural networks</a></li>
   <li><a href="#node-embeddings" id="toc-node-embeddings" class="nav-link" data-scroll-target="#node-embeddings">Node embeddings</a></li>
   <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation">Simulation</a></li>
   <li><a href="#multilayer-graph-clustering" id="toc-multilayer-graph-clustering" class="nav-link" data-scroll-target="#multilayer-graph-clustering">Multilayer graph clustering</a></li>
+  <li><a href="#node2vec-performance-against-noisesparsity" id="toc-node2vec-performance-against-noisesparsity" class="nav-link" data-scroll-target="#node2vec-performance-against-noisesparsity">Node2Vec performance against noise/sparsity</a></li>
   <li><a href="#application-to-merfish-visp-data" id="toc-application-to-merfish-visp-data" class="nav-link" data-scroll-target="#application-to-merfish-visp-data">Application to MERFISH VISp data</a></li>
   <li><a href="#gene-imputation" id="toc-gene-imputation" class="nav-link" data-scroll-target="#gene-imputation">Gene Imputation</a></li>
   <li><a href="#limitations-and-future-work" id="toc-limitations-and-future-work" class="nav-link" data-scroll-target="#limitations-and-future-work">Limitations and future work</a></li>
@@ -203,53 +203,55 @@ window.Quarto = {
 <div id="fig-peptide-networks" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-peptide-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="pepnet.png" class="img-fluid figure-img" width="800">
+<img src="pepnet.png" class="img-fluid figure-img" width="500">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-peptide-networks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Peptidergic communication networks
 </figcaption>
 </figure>
 </div>
-<p>Communication in the brain can occur between pairs of cells that release neuropeptides and cells that sense these neuropeptides. Each pair constitutes a distinct communication network between neurons.</p>
-<p>In this study, we develop computational methods to study the organization of these networks.</p>
-<section id="introduction" class="level3">
-<h3 class="anchored" data-anchor-id="introduction">Introduction</h3>
-<p>Peptides released by one neuron can bind to G-protein coupled receptors (GPCRs) on other neurons and modulate their activity. Many such cognate neuropeptide- GPCR pairs have been identified in the literature. These constitute multiple molecularly distinct communication networks between neurons. Single cell transcriptomic data suggests that a vast majority of cortical neurons participate in such communication in a cell-type dependent manner <span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>.</p>
-<p>Spatial transcriptomic experiments measure gene expression while preserving context within the tissue. We consider a recent whole mouse brain dataset obtained with an in-situ hybridization-based technique called MERFISH <span class="citation" data-cites="yao2023wholebrain">(<a href="#ref-yao2023wholebrain" role="doc-biblioref">Yao et al. 2023</a>)</span> and develop graph-based methods to study the organization of putative peptidergic communication networks.</p>
+<p>Communication in the brain can occur between cells that release specific neuropeptides and cells that sense these neuropeptides.</p>
+<p>In this study, we develop computational methods to study the organization of this form of communication.</p>
 <p>We explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks and adapt Node2Vec <span class="citation" data-cites="grover2016node2vec">(<a href="#ref-grover2016node2vec" role="doc-biblioref">Grover and Leskovec 2016</a>)</span> to obtain multilayer graph embeddings.</p>
+<section id="background-on-neuropeptidergic-communication" class="level3">
+<h3 class="anchored" data-anchor-id="background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</h3>
+<p>We study neuropeptidergic communication between ligands and receptors in the brain.</p>
+<p>Ligands are small molecules that bind selectively to receptor proteins.</p>
+<p>The ligands of interest are peptides (small chains of amino acids), and the receptor proteins of interest are G-protein coupled receptors or GPCRs <span class="citation" data-cites="rosenbaum2009GPCRreview">(<a href="#ref-rosenbaum2009GPCRreview" role="doc-biblioref">Rosenbaum, Rasmussen, and Kobilka 2009</a>)</span>.</p>
+<p>Peptides released by one neuron can bind to GPCRs on other neurons and modulate their activity. Many such cognate neuropeptide-GPCR pairs have been identified in the literature.</p>
+<p>Single cell transcriptomic data suggests that a vast majority of cortical neurons participate in such communication in a cell-type dependent manner <span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>.</p>
+<p>Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as an unique communication channel between neurons <span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>.</p>
+<p>It is important to study these networks because combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Such peptidergic signaling is slower and longer lasting compared to synaptic signaling.</p>
+<p>Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle <span class="citation" data-cites="liu2021credit_assignment">(<a href="#ref-liu2021credit_assignment" role="doc-biblioref">Liu et al. 2021</a>)</span>.</p>
 </section>
 <section id="background-on-spatial-transcriptomic-data" class="level3">
 <h3 class="anchored" data-anchor-id="background-on-spatial-transcriptomic-data">Background on spatial transcriptomic data</h3>
-<p>Spatial transcriptomic experiments measure gene expression while preserving spatial context. There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample <span class="citation" data-cites="lein2017promise">Chen et al. (<a href="#ref-chen2023spacetxtech" role="doc-biblioref">2023</a>)</span>. Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN~<span class="citation" data-cites="hawrylycz2023guide">Hawrylycz et al. (<a href="#ref-hawrylycz2023guide" role="doc-biblioref">2023</a>)</span>. Here we focus on a whole mouse brain dataset obtained with an in-situ hybridization based technique called MERFISH <span class="citation" data-cites="yao2023wholebrain">Yao et al. (<a href="#ref-yao2023wholebrain" role="doc-biblioref">2023</a>)</span>. This dataset consists of expression measurements of approximately 500 genes in 4 million cells from a single mouse brain.</p>
+<p>We study spatial peptidergic communication networks with spatial transcriptomic data.</p>
+<p>Spatial transcriptomic experiments measure gene expression while preserving spatial context. There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample <span class="citation" data-cites="lein2017promise">Chen et al. (<a href="#ref-chen2023spacetxtech" role="doc-biblioref">2023</a>)</span>. Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN~<span class="citation" data-cites="hawrylycz2023guide">Hawrylycz et al. (<a href="#ref-hawrylycz2023guide" role="doc-biblioref">2023</a>)</span>.</p>
+<p>We consider a recent whole mouse brain dataset obtained with an in-situ hybridization-based technique called MERFISH <span class="citation" data-cites="yao2023wholebrain">(<a href="#ref-yao2023wholebrain" role="doc-biblioref">Yao et al. 2023</a>)</span>.</p>
+<p>This dataset consists of expression measurements of approximately 500 genes in 4 million cells from a single mouse brain.</p>
 <p>We focus on the primary visual cortex (VISp region) in this study as shown in <a href="#fig-spatial-data" class="quarto-xref">Figure&nbsp;2</a>.</p>
 <div id="fig-spatial-data" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-spatial-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="spatial.png" class="img-fluid figure-img" width="800">
+<img src="spatial.png" class="img-fluid figure-img" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spatial-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: VISp region of the brain. The different colors assigned to cells correspond to different subclasses.
 </figcaption>
 </figure>
 </div>
-<p>We note that the subclass distribution of cells in the dataset is imbalanced.</p>
+<p>We note that the subclass distribution of cells in the dataset is imbalanced. This makes subclass classification tasks more difficult.</p>
 <div id="fig-subclass-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-subclass-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="subclass_dist.png" class="img-fluid figure-img" width="800">
+<img src="subclass_dist.png" class="img-fluid figure-img" width="600">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-subclass-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Subclass distribution of cells in VISp
 </figcaption>
 </figure>
 </div>
-</section>
-<section id="background-on-neuropeptidergic-communication" class="level3">
-<h3 class="anchored" data-anchor-id="background-on-neuropeptidergic-communication">Background on neuropeptidergic communication</h3>
-<p>Ligands are small molecules that bind selectively to receptor proteins. Peptides are small chains of amino acids.</p>
-<p>Here the ligands of interest are peptides, and the receptor proteins of interest are GPCRs <span class="citation" data-cites="rosenbaum2009GPCRreview">(<a href="#ref-rosenbaum2009GPCRreview" role="doc-biblioref">Rosenbaum, Rasmussen, and Kobilka 2009</a>)</span>. Peptides released by one neuron can bind to GPCRs on other neurons and modulate their activity.</p>
-<p>Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as unique communication channel <span class="citation" data-cites="smith2019peptidergic">(<a href="#ref-smith2019peptidergic" role="doc-biblioref">Smith et al. 2019</a>)</span>. Importantly, such peptidergic signaling is slower and longer lasting compared to synaptic signaling.</p>
-<p>Combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle <span class="citation" data-cites="liu2021credit_assignment">(<a href="#ref-liu2021credit_assignment" role="doc-biblioref">Liu et al. 2021</a>)</span>.</p>
 </section>
 <section id="neuropeptidergic-communication-as-directed-multilayer-graphs" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="neuropeptidergic-communication-as-directed-multilayer-graphs">Neuropeptidergic communication as directed multilayer graphs</h3>
@@ -263,6 +265,7 @@ Figure&nbsp;3: Subclass distribution of cells in VISp
 <li>vertex i expresses the peptide precursor gene</li>
 <li>vertex j expresses the GPCR gene</li>
 </ol>
+<p>The peptidergic multilayer graph does not contain any edges between layers.</p>
 <p>We set <span class="math inline">\(d_{threshold} = 40 \textmu m\)</span> for all experiments unless mentioned otherwise.</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
@@ -270,10 +273,10 @@ Figure&nbsp;3: Subclass distribution of cells in VISp
 </div></div><div id="fig-multilayer" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-multilayer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="multilayer_graphs.png" class="img-fluid figure-img" width="800">
+<img src="multilayer_graphs.png" class="img-fluid figure-img" width="1000">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multilayer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Multilayer graphs
+Figure&nbsp;4: Sliced section of each layer of the multilayer graph, where each layer corresponds to a unique communication channel
 </figcaption>
 </figure>
 </div>
@@ -282,75 +285,78 @@ Figure&nbsp;4: Multilayer graphs
 <section id="node-classification-with-graph-neural-networks" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="node-classification-with-graph-neural-networks">Node classification with graph neural networks</h3>
 <p>We first explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks.</p>
+<p>Graph neural networks combine features of nodes that are adjacent according to the underlying graph.</p>
 <div id="fig-gnn" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gnn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="gnn.png" class="img-fluid figure-img" width="500">
+<img src="gnn.png" class="img-fluid figure-img" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gnn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Graph attention network overview
+Figure&nbsp;5: Overview of graph attention networks
 </figcaption>
 </figure>
 </div>
-<p>Graph neural networks combine features of nodes that are adjacent according to the underlying graph.</p>
 <p>A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation.</p>
 <p>In GATv2, the node features are weighted using a function of node pairs, <span class="math inline">\(\theta\)</span> <span class="citation" data-cites="brody2021attentive">(<a href="#ref-brody2021attentive" role="doc-biblioref">Brody, Alon, and Yahav 2021</a>)</span>.</p>
 <p>Functions <span class="math inline">\(\phi\)</span> and <span class="math inline">\(\theta\)</span> are learned to optimize a per-node classification objective.</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Code for node classification with graph neural networks can be found <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/3_revisiting_gnn.ipynb">here</a>.</p>
-</div></div><div id="fig-gnn-results" class="quarto-float quarto-figure quarto-figure-center anchored">
+</div></div><p>To test if neighborhood information is helpful for cell type classification, we construct a graph with cells as nodes and their gene expression values as initial node features. Cognate neuropeptide-GPCR pairs that lie within the specified distance are connected with an edge.</p>
+<p>Initial experiments showed that a relatively simple classifier like a support vector machine could predict supertypes extremely well (&gt; 95%) if given the full gene expression (550 genes) as input. In such a setting, neighborhood information won’t contribute much to the classification task.</p>
+<p>Thus, we considered a more difficult problem where only a subset of genes are available. We randomly selected 3 nonoverlapping subsets with size equal to 5% of the total genes available. We combined these subsets to create 3 subsets of size equal to 5%, 10% and 15% of the total genes available.</p>
+<div id="fig-gnn-results" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-gnn-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="gnn_results.png" class="img-fluid figure-img" width="500">
+<img src="gnn_results.png" class="img-fluid figure-img" width="400">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gnn-results-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Using GATv2 for supertype classification
+Figure&nbsp;6: Supertype classification accuracy with graph neural networks where we use cells as nodes and subsets of their gene expression values as initial node features. Cognate neuropeptide-GPCR pairs that lie within the specified distance are connected with an edge.
 </figcaption>
 </figure>
 </div>
-<p>Here, we consider cells as nodes, and their gene expression as initial node features. Cognate neuropeptide-GPCR pairs that lie within the specified distance are connected with an edge.</p>
-<p>Cell type classification is challenging when few genes are available. We find that gene expression in neighboring cells can improve supertype classification in this regime.</p>
+<p>We found that gene expression in neighboring cells can improve supertype classification when fewer genes are available.</p>
 </section>
 <section id="node-embeddings" class="level3">
 <h3 class="anchored" data-anchor-id="node-embeddings">Node embeddings</h3>
-<p>Now that we found that neighboorhood information can be helpful for cell type classification, we wanted to see if the neighborhood structure of a cell by itself (without any gene expression information) can be informative of cell types.</p>
+<p>Having found that neighboorhood information can be helpful for cell type classification, we wanted to see if the neighborhood structure of a cell by itself (without any gene expression information) can be informative of cell types.</p>
 <p>To do so, we use node embedding methods.</p>
+<p><strong>Node2Vec</strong> learns an embedding <span class="math inline">\(f(u)\)</span> that is predictive of the neighborhood <span class="math inline">\(\mathcal{N}(u)\)</span> of each node <span class="math inline">\(u\)</span>.</p>
 <div id="fig-node2vec" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-node2vec-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="node2vec.png" class="img-fluid figure-img" width="500">
+<img src="node2vec.png" class="img-fluid figure-img" width="300">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-node2vec-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Node2Vec overview
+Figure&nbsp;7: Overview of Node2Vec
 </figcaption>
 </figure>
 </div>
-<p><strong>Node2Vec</strong> learns an embedding <span class="math inline">\(f(u)\)</span> that is predictive of the neighborhood <span class="math inline">\(\mathcal{N}(u)\)</span> of each node <span class="math inline">\(u\)</span>.</p>
 <p>The neighborhood for each node is determined through fixed length, 2nd order random walks starting from each node.</p>
 <p>Parameters <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> determine the transition probabilities for the random walk.</p>
+<p><strong>Spectral graph clustering</strong> frames the problem as an eigen decomposition <span class="citation" data-cites="von2007tutorial">(<a href="#ref-von2007tutorial" role="doc-biblioref">Von Luxburg 2007</a>)</span>.</p>
+<p>Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.</p>
 <div id="fig-spectral" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="spectral.png" class="img-fluid figure-img" width="500">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-spectral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Eigenvectors of the laplacian matrix
+Figure&nbsp;8: Eigenvectors of the laplacian matrix for the cell x cell matrix from the toy problem in <a href="#fig-toy" class="quarto-xref">Figure&nbsp;9</a>
 </figcaption>
 </figure>
 </div>
-<p><strong>Spectral graph clustering</strong> frames the problem as an eigen decomposition <span class="citation" data-cites="von2007tutorial">(<a href="#ref-von2007tutorial" role="doc-biblioref">Von Luxburg 2007</a>)</span>. Specifically, the eigenvectors of the Laplacian matrix are used as features for clustering.</p>
 </section>
 <section id="simulation" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="simulation">Simulation</h3>
-<p>We build intuition for how peptidergic connectivity could partition cells into meaningful groups even in the absence of explicit gene expression information with a toy problem.</p>
+<p>We build intuition for how embeddings based on peptidergic connectivity could partition cells into meaningful groups even in the absence of explicit gene expression information with a toy problem.</p>
 <div id="fig-toy" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-toy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="toy.png" class="img-fluid figure-img" width="700">
+<img src="toy.png" class="img-fluid figure-img" width="800">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-toy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Overview of toy problem
+Figure&nbsp;9: Type x type matrix, cell x cell matrix, and visualization of the cell x cell matrix
 </figcaption>
 </figure>
 </div>
@@ -361,14 +367,14 @@ Figure&nbsp;9: Overview of toy problem
 </div></div><div id="fig-toy_emb" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-toy_emb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="tsne_2.png" class="img-fluid figure-img" width="300">
+<img src="tsne_2.png" class="img-fluid figure-img" width="200">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-toy_emb-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: TSNE projection of Node2Vec embedding
+Figure&nbsp;10: TSNE projection of Node2Vec embeddings obtained from the cell x cell matrix from <a href="#fig-toy" class="quarto-xref">Figure&nbsp;9</a>
 </figcaption>
 </figure>
 </div>
-<p>Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components. We found that spectral graph clustering can identify these components too. However, spectral graph clustering has limited applicability to our dataset given its computational complexity of <span class="math inline">\(O(n^3)\)</span>.</p>
+<p>Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components. We found that spectral graph clustering can identify these components too. However, spectral graph clustering has limited applicability to our dataset given its computational complexity of <span class="math inline">\(O(n^3)\)</span> <span class="citation" data-cites="von2007tutorial">(<a href="#ref-von2007tutorial" role="doc-biblioref">Von Luxburg 2007</a>)</span>.</p>
 <p>Conencting this back to the problem of peptidergic communication, we can think of the dark blue, light blue, red, and green nodes as 4 cell types that communicate with each other, and the yellow, brown, orange, and violet nodes as 4 cell types that communicate with each other.</p>
 <p>This type x type adjacency matrix denotes 1 communication network between the cells or 1 layer in the multilayer graph. With 1 layer, we can distinguish between 2 groups of cells.</p>
 </section>
@@ -387,11 +393,17 @@ Figure&nbsp;10: TSNE projection of Node2Vec embedding
 <img src="toy2.png" class="img-fluid figure-img" width="600">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-toy_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: An embedding is generated from each type x type matrix. The 3 embeddings are concatenated and visualized with TSNE.
+Figure&nbsp;11: 3 carefully chosen cell x cell matrices and a TSNE projection of concatenated Node2Vec embeddings from the 3 matrices
 </figcaption>
 </figure>
 </div>
-<p>Node2Vec embeddings cluster according to the underlying block structure in a manner that is robust to sparsity as well as noise in the cell x cell graph.</p>
+<p>An embedding is generated from each type x type matrix. The 3 embeddings are concatenated and visualized with TSNE. We see that with 3 layers, we can perfectly distinguish between the 8 cell types.</p>
+<p>Simiarly, we hypothesize that with 3 peptidergic communication networks, we can distinguish between 8 groups of cells.</p>
+</section>
+<section id="node2vec-performance-against-noisesparsity" class="level3">
+<h3 class="anchored" data-anchor-id="node2vec-performance-against-noisesparsity">Node2Vec performance against noise/sparsity</h3>
+<p>Because gene expression data is noisy and our peptidergic communication networks are quite sparse, we study Node2Vec’s performance when faced with these issues.</p>
+<p>We see that Node2Vec embeddings cluster according to the underlying block structure in a manner that is robust to sparsity as well as noise in the cell x cell graph.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -409,22 +421,22 @@ Figure&nbsp;11: An embedding is generated from each type x type matrix. The 3 em
 </section>
 <section id="application-to-merfish-visp-data" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="application-to-merfish-visp-data">Application to MERFISH VISp data</h3>
-<p>We inspect the utility of graph embeddings in identifying celltypes (subclass) and spatial groupings in a few different settings.</p>
+<p>We apply Node2Vec to MERFISH VISp data to inspect the utility of graph embeddings in identifying celltypes (subclass) and spatial groupings.</p>
+<p>We consider 4 different methods of obtaining Node2Vec embeddings.</p>
 <ol type="1">
 <li>considering only proximity of cells in the graph (<strong>distance</strong>)</li>
-<li>concatenated embeddings of individual peptidergic graphs (<strong>independent</strong>)</li>
+<li>concatenating embeddings of individual peptidergic graphs (<strong>independent</strong>)</li>
 <li>collapsing the multi-layer graphs into a single layer graph (<strong>squashed</strong>)</li>
 <li>jointly considering the multilayer graphs with an <strong>adapted</strong> Node2Vec model (<strong>joint</strong>)</li>
 </ol>
-<p>In the joint setting, we sample random walks from all layers to determine the neighborhood for each node (as opposed to neighborhoods constructed from only 1 layer).</p>
-<p>Note that the peptidergic multilayer graph does not contain any edges between layers.</p>
+<p>For the joint method, we sample random walks from all layers to determine the neighborhood for each node (as opposed to neighborhoods constructed from only 1 layer). To do so, we modify the Pytorch Geometric implementation of Node2Vec.</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Code for <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5a_application%20experiment_distance.ipynb">distance</a>, <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5b_application%20experiment_independent.ipynb">independent</a>, <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5c_application%20experiment_squashed.ipynb">squashed</a>, and <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/5d_application%20experiment_joint.ipynb">joint</a>.</p>
 </div></div><div id="fig-application" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-application-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="application.png" class="img-fluid figure-img" width="600">
+<img src="application.png" class="img-fluid figure-img" width="700">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-application-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;12: Topmost plots are TSNE projections of embeddings with colors obtained from leiden clustering. Bottom plots are projections of leiden clusters onto the VISp region. Accuracy refers to subclass classification accuracy using the embeddings. Note that classification accuracy using a random classifier is approximately 25%.
@@ -436,47 +448,37 @@ Figure&nbsp;12: Topmost plots are TSNE projections of embeddings with colors obt
 </section>
 <section id="gene-imputation" class="level3">
 <h3 class="anchored" data-anchor-id="gene-imputation">Gene Imputation</h3>
-<p>The expression of peptidergic communication genes that were not part of the MERFISH dataset can be recovered through imputation. Several tools have been benchmarked for this task <span class="citation" data-cites="li2022benchmarking">(<a href="#ref-li2022benchmarking" role="doc-biblioref">Li et al. 2022</a>)</span>, and we used the top performing model Tangram to impute values of all peptidergic communication genes.</p>
+<p>We spectulated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels).</p>
+<p>To test this hypothesis, we tried gene imputation methods.</p>
+<p>Gene imputation methods can be used to recover the expression of peptidergic communication genes that were not part of the MERFISH dataset. Several tools have been benchmarked for this task <span class="citation" data-cites="li2022benchmarking">(<a href="#ref-li2022benchmarking" role="doc-biblioref">Li et al. 2022</a>)</span>, and we used the top performing model Tangram to impute values of all peptidergic communication genes.</p>
 <p>Tangram maps cells from a scRNA-seq dataset to cells (or voxels) from a spatial transcriptomic dataset <span class="citation" data-cites="biancalani2021deep">(<a href="#ref-biancalani2021deep" role="doc-biblioref">Biancalani et al. 2021</a>)</span>.</p>
+<p>Tangram learns a mapping matrix M defined such that <span class="math inline">\(M_{ij} \geq 0\)</span> is the probability of cell i (from scRNA-seq) mapping to cell <span class="math inline">\(j\)</span> (from spatial transcriptomic data). The loss function used to optimize M is shown below.</p>
 <p><span class="math display">\[
 L(S, M) = \sum_{k}^{n_{genes}} \cos_{sim} ((M^T S)_{*, k}, G_{*,k})
 \]</span></p>
 <p>S: scRNA-seq matrix (cell x gene)</p>
 <p>G: spatial transcriptomic data matrix (cell x gene)</p>
 <p>M: mapping matrix (cell * cell)</p>
-<p>Tangram learns a mapping matrix M defined such that <span class="math inline">\(M_{ij} \geq 0\)</span> is the probability of cell i (from scRNA-seq) mapping to cell <span class="math inline">\(j\)</span> (from spatial transcriptomic data).</p>
 <p>We assessed imputation performance by using peptidergic communication genes that were already measured as test data.</p>
 <div id="fig-tangram" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-tangram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="tangram.png" class="img-fluid figure-img" width="600">
+<img src="tangram.png" class="img-fluid figure-img" width="900">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tangram-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;13: The diagrams on the left are scatter plots of measured and predicted gene expression values for test genes (colors indicate subclass). The diagrams on the right are violin plots of test gene expression for each subclass.
+Figure&nbsp;13: The diagrams on the left are scatter plots of measured and predicted gene expression values for test genes (colors indicate subclass). The diagrams on the right are violin plots of test gene expression for each subclass (blue indicates real gene expression values and orange indicates imputed values).
 </figcaption>
 </figure>
 </div>
-<p>We conclude that the correlation between predicted gene expression and actual gene expression is not strong enough for us to use predicted values for the 32 other peptidergic communication gene pairs. In particular, a non trivial amount of null gene expression values were mapped to positive values for most genes.</p>
+<p>We found that the correlation between imputed gene expression and actual gene expression is not strong enough for us to use imputed results in our multilayer graphs. In particular, a non trivial amount of null gene expression values were mapped to positive values.</p>
 </section>
 <section id="limitations-and-future-work" class="level3">
 <h3 class="anchored" data-anchor-id="limitations-and-future-work">Limitations and future work</h3>
-<p>Only 5 out of the 37 cognate neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset, which precludes an assessment at more detailed levels of the taxonomy</p>
+<p>Only 5 out of the 37 cognate neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset, which precludes an assessment at more detailed levels of the taxonomy.</p>
 <p>Neuron morphology may be an important consideration relevant for the full spatial extent of peptidergic communication. Arbor density representations derived from patch-seq datasets could offer a way forward.</p>
 <p><br>
 </p>
-<p>The poster is attached below.</p>
-<div id="fig-poster" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-poster-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Poster_draft.jpg" class="img-fluid figure-img" width="600">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-poster-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: Poster
-</figcaption>
-</figure>
-</div>
-<p><br>
-</p>
+<p>The poster can be found <a href="https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/1_exploring_data_graph.ipynb">here</a>.</p>
 <p>Code repository: <a href="https://github.com/donghyunkm/cciGraphs" class="uri">https://github.com/donghyunkm/cciGraphs</a></p>
 <p><br>
 </p>
