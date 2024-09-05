@@ -309,7 +309,7 @@ Neuron morphology may be an important consideration relevant for the full spatia
 
 \
 
-The poster can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/1_exploring_data_graph.ipynb).
+The poster can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/Donghyun_Kim%20(44x56)%20Final.pdf).
 
 Code repository: <https://github.com/donghyunkm/cciGraphs>
 
