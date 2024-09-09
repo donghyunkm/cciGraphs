@@ -265,7 +265,7 @@ We speculate that cell clusters obtained with leiden clustering correspond to sp
 
 ### Gene Imputation
 
-We spectulated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels). 
+We speculated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels). 
 
 To test this hypothesis, we tried gene imputation methods.
 

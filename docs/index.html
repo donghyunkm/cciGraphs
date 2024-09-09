@@ -448,7 +448,7 @@ Figure&nbsp;12: Topmost plots are TSNE projections of embeddings with colors obt
 </section>
 <section id="gene-imputation" class="level3">
 <h3 class="anchored" data-anchor-id="gene-imputation">Gene Imputation</h3>
-<p>We spectulated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels).</p>
+<p>We speculated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels).</p>
 <p>To test this hypothesis, we tried gene imputation methods.</p>
 <p>Gene imputation methods can be used to recover the expression of peptidergic communication genes that were not part of the MERFISH dataset. Several tools have been benchmarked for this task <span class="citation" data-cites="li2022benchmarking">(<a href="#ref-li2022benchmarking" role="doc-biblioref">Li et al. 2022</a>)</span>, and we used the top performing model Tangram to impute values of all peptidergic communication genes.</p>
 <p>Tangram maps cells from a scRNA-seq dataset to cells (or voxels) from a spatial transcriptomic dataset <span class="citation" data-cites="biancalani2021deep">(<a href="#ref-biancalani2021deep" role="doc-biblioref">Biancalani et al. 2021</a>)</span>.</p>
