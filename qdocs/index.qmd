@@ -40,7 +40,7 @@ We study spatial peptidergic communication networks with spatial transcriptomic 
 
 Spatial transcriptomic experiments measure gene expression while preserving spatial context. 
 There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample [@lein2017promise, @marx2021spacetx, @ortiz2021spatial, @moffitt2022spacetxrev, @chen2023spacetxtech].
-Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN~@hawrylycz2023guide.
+Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN [@hawrylycz2023guide].
 
 We consider a recent whole mouse brain dataset obtained with an in-situ hybridization-based technique called MERFISH [@yao2023wholebrain].
 
