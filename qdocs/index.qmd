@@ -9,44 +9,22 @@ bibliography: refs.bib
 Peptidergic communication networks
 :::
 
-Communication in the brain can occur between cells that release specific neuropeptides and cells that sense these neuropeptides. 
-
-In this study, we develop computational methods to study the organization of this form of communication.
-
-We explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks and adapt Node2Vec [@grover2016node2vec] to obtain multilayer graph embeddings. 
+Communication in the brain can occur between cells that release specific neuropeptides and cells that sense these neuropeptides. In this study, we develop computational methods to study the organization of this form of communication. We explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks and adapt Node2Vec [@grover2016node2vec] to obtain multilayer graph embeddings. 
 
 ### Background on neuropeptidergic communication
 
-We study neuropeptidergic communication between ligands and receptors in the brain. 
+We study neuropeptidergic communication between ligands and receptors in the brain. Ligands are small molecules that bind selectively to receptor proteins. The ligands of interest are peptides (small chains of amino acids), and the receptor proteins of interest are G-protein coupled receptors or GPCRs [@rosenbaum2009GPCRreview]. Peptides released by one neuron can bind to GPCRs on other neurons and modulate their activity. Many such cognate neuropeptide-GPCR pairs have been identified in the literature.
 
-Ligands are small molecules that bind selectively to receptor proteins. 
+Single cell transcriptomic data suggests that a vast majority of cortical neurons participate in such communication in a cell-type dependent manner [@smith2019peptidergic]. Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as an unique communication channel between neurons [@smith2019peptidergic].
 
-The ligands of interest are peptides (small chains of amino acids), and the receptor proteins of interest are G-protein coupled receptors or GPCRs [@rosenbaum2009GPCRreview].
-
-Peptides released by one neuron can bind to GPCRs on other neurons and modulate their activity. Many such cognate neuropeptide-GPCR pairs have been identified in the literature.
-
-Single cell transcriptomic data suggests that a vast majority of cortical neurons participate in such communication in a cell-type dependent manner [@smith2019peptidergic].
-
-Thus, compatible (a.k.a cognate) peptide-GPCR pairs can be considered as an unique communication channel between neurons [@smith2019peptidergic].
-
-It is important to study these networks because combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Such peptidergic signaling is slower and longer lasting compared to synaptic signaling.
-
-Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle [@liu2021credit_assignment].
+It is important to study these networks because combinatorial expression of neuropeptides and receptors enables local, type specific communication between neurons. Such peptidergic signaling is slower and longer lasting compared to synaptic signaling. Computational studies also suggest that such neuron-type–specific local neuromodulation may be a critical piece of the biological credit-assignment puzzle [@liu2021credit_assignment].
 
 
 ### Background on spatial transcriptomic data
 
-We study spatial peptidergic communication networks with spatial transcriptomic data.
-
-Spatial transcriptomic experiments measure gene expression while preserving spatial context. 
-There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample [@lein2017promise, @marx2021spacetx, @ortiz2021spatial, @moffitt2022spacetxrev, @chen2023spacetxtech].
-Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN [@hawrylycz2023guide].
-
-We consider a recent whole mouse brain dataset obtained with an in-situ hybridization-based technique called MERFISH [@yao2023wholebrain].
-
-This dataset consists of expression measurements of approximately 500 genes in 4 million cells from a single mouse brain.
-
-We focus on the primary visual cortex (VISp region) in this study as shown in @fig-spatial-data.
+We study spatial peptidergic communication networks with spatial transcriptomic data. Spatial transcriptomic experiments measure gene expression while preserving spatial context. 
+There are many technologies to acquire such data, with trade-offs in spatial resolution, speed, and compatibility with other kinds of experiments on the same tissue sample [@lein2017promise, @marx2021spacetx, @ortiz2021spatial, @moffitt2022spacetxrev, @chen2023spacetxtech]. Some of these technologies, namely SeqFISH, MERFISH, Slide-Seq have been used to produce atlas scale datasets in the mouse brain by the BICCN [@hawrylycz2023guide].
+We consider a recent whole mouse brain dataset obtained with an in-situ hybridization-based technique called MERFISH [@yao2023wholebrain]. This dataset consists of expression measurements of approximately 500 genes in 4 million cells from a single mouse brain. We focus on the primary visual cortex (VISp region) in this study as shown in @fig-spatial-data.
 
 ::: {#fig-spatial-data}
 ![](spatial.png){width=300}
@@ -61,8 +39,6 @@ We note that the subclass distribution of cells in the dataset is imbalanced. Th
 
 Subclass distribution of cells in VISp
 :::
-
-
 
 
 ### Neuropeptidergic communication as directed multilayer graphs 
@@ -82,9 +58,7 @@ For the $l$ th network, an edge exists from vertex $i$ to vertex $j$ if all the 
 2. vertex i expresses the peptide precursor gene
 3. vertex j expresses the GPCR gene
 
-The peptidergic multilayer graph does not contain any edges between layers.
-
-We set $d_{threshold} = 40 \textmu m$ for all experiments unless mentioned otherwise. 
+The peptidergic multilayer graph does not contain any edges between layers. We set $d_{threshold} = 40 \textmu m$ for all experiments unless mentioned otherwise. 
 
 ::: {.column-margin}
 Code for graph construction can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/1_exploring_data_graph.ipynb).
@@ -101,9 +75,7 @@ Sliced section of each layer of the multilayer graph, where each layer correspon
 
 ### Node classification with graph neural networks
 
-We first explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks.
-
-Graph neural networks combine features of nodes that are adjacent according to the underlying graph.
+We first explore regimes in which neighborhood information is helpful for cell type classification with graph neural networks. Graph neural networks combine features of nodes that are adjacent according to the underlying graph.
 
 ::: {#fig-gnn}
 ![](gnn.png){width=300}
@@ -112,19 +84,13 @@ Overview of graph attention networks
 :::
 
 
-A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation.
-
-In GATv2, the node features are weighted using a function of node pairs, $\theta$ [@brody2021attentive]. 
-
-Functions $\phi$ and $\theta$ are learned to optimize a per-node classification objective.
+A nonlinear function ∅ of aggregated (sum here) weighted node features determines updated node representation. In GATv2, the node features are weighted using a function of node pairs, $\theta$ [@brody2021attentive]. Functions $\phi$ and $\theta$ are learned to optimize a per-node classification objective.
 
 ::: {.column-margin}
 Code for node classification with graph neural networks can be found [here](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/3_revisiting_gnn.ipynb).
 :::
 
-To test if neighborhood information is helpful for cell type classification, we construct a graph with cells as nodes and their gene expression values as initial node features. Cognate neuropeptide-GPCR pairs that lie within the specified distance are connected with an edge. 
-
-Initial experiments showed that a relatively simple classifier like a support vector machine could predict supertypes extremely well (> 95%) if given the full gene expression (550 genes) as input. In such a setting, neighborhood information won't contribute much to the classification task.
+To test if neighborhood information is helpful for cell type classification, we construct a graph with cells as nodes and their gene expression values as initial node features. Cognate neuropeptide-GPCR pairs that lie within the specified distance are connected with an edge. Initial experiments showed that a relatively simple classifier like a support vector machine could predict supertypes extremely well (> 95%) if given the full gene expression (550 genes) as input. In such a setting, neighborhood information won't contribute much to the classification task.
 
 Thus, we considered a more difficult problem where only a subset of genes are available. We randomly selected 3 nonoverlapping subsets with size equal to 5% of the total genes available. We combined these subsets to create 3 subsets of size equal to 5%, 10% and 15% of the total genes available. 
 
@@ -139,9 +105,7 @@ We found that gene expression in neighboring cells can improve supertype classif
 
 ### Node embeddings
 
-Having found that neighboorhood information can be helpful for cell type classification, we wanted to see if the neighborhood structure of a cell by itself (without any gene expression information) can be informative of cell types. 
-
-To do so, we use node embedding methods.
+Having found that neighboorhood information can be helpful for cell type classification, we wanted to see if the neighborhood structure of a cell by itself (without any gene expression information) can be informative of cell types. To do so, we use node embedding methods.
 
 **Node2Vec** learns an embedding $f(u)$ that is predictive of the neighborhood $\mathcal{N}(u)$ of each node $u$.
 
@@ -152,9 +116,7 @@ Overview of Node2Vec
 :::
 
 
-The neighborhood for each node is determined through fixed length, 2nd order random walks starting from each node.
-
-Parameters $p$ and $q$ determine the transition probabilities for the random walk.
+The neighborhood for each node is determined through fixed length, 2nd order random walks starting from each node. Parameters $p$ and $q$ determine the transition probabilities for the random walk.
 
 **Spectral graph clustering** frames the problem as an eigen decomposition [@von2007tutorial]. 
 
@@ -192,9 +154,7 @@ TSNE projection of Node2Vec embeddings obtained from the cell x cell matrix from
 
 Clustering the embeddings obtained with Node2Vec is a scalable way to identify such components. We found that spectral graph clustering can identify these components too. However, spectral graph clustering has limited applicability to our dataset given its computational complexity of $O(n^3)$ [@von2007tutorial].       
 
-Conencting this back to the problem of peptidergic communication, we can think of the dark blue, light blue, red, and green nodes as 4 cell types that communicate with each other, and the yellow, brown, orange, and violet nodes as 4 cell types that communicate with each other.
-
-This type x type adjacency matrix denotes 1 communication network between the cells or 1 layer in the multilayer graph. With 1 layer, we can distinguish between 2 groups of cells.  
+Conencting this back to the problem of peptidergic communication, we can think of the dark blue, light blue, red, and green nodes as 4 cell types that communicate with each other, and the yellow, brown, orange, and violet nodes as 4 cell types that communicate with each other. This type x type adjacency matrix denotes 1 communication network between the cells or 1 layer in the multilayer graph. With 1 layer, we can distinguish between 2 groups of cells.  
 
 ### Multilayer graph clustering
 
@@ -219,15 +179,11 @@ where $k = \log_2 n$
 3 carefully chosen cell x cell matrices and a TSNE projection of concatenated Node2Vec embeddings from the 3 matrices
 :::
 
-An embedding is generated from each type x type matrix. The 3 embeddings are concatenated and visualized with TSNE. We see that with 3 layers, we can perfectly distinguish between the 8 cell types. 
-
-Simiarly, we hypothesize that with 3 peptidergic communication networks, we can distinguish between 8 groups of cells.
+An embedding is generated from each type x type matrix. The 3 embeddings are concatenated and visualized with TSNE. We see that with 3 layers, we can perfectly distinguish between the 8 cell types. Simiarly, we hypothesize that with 3 peptidergic communication networks, we can distinguish between 8 groups of cells.
 
 ### Node2Vec performance against noise/sparsity
 
-Because gene expression data is noisy and our peptidergic communication networks are quite sparse, we study Node2Vec's performance when faced with these issues.
-
-We see that Node2Vec embeddings cluster according to the underlying block structure in a manner that is robust to sparsity as well as noise in the cell x cell graph.
+Because gene expression data is noisy and our peptidergic communication networks are quite sparse, we study Node2Vec's performance when faced with these issues. We see that Node2Vec embeddings cluster according to the underlying block structure in a manner that is robust to sparsity as well as noise in the cell x cell graph.
 
 Noise experiment             |  Sparsity experiment
 :-------------------------:|:-------------------------:
@@ -258,22 +214,14 @@ Code for [distance](https://github.com/donghyunkm/cciGraphs/blob/main/notebooks/
 Topmost plots are TSNE projections of embeddings with colors obtained from leiden clustering. Bottom plots are projections of leiden clusters onto the VISp region. Accuracy refers to subclass classification accuracy using the embeddings. Note that classification accuracy using a random classifier is approximately 25%.
 :::
 
-We observe that even in the absence of explicit gene expression information, embeddings obtained from peptidergic connectivity contain information about cell types.  
-
-We speculate that cell clusters obtained with leiden clustering correspond to spatial domains relevant from a functional point of view.
+We observe that even in the absence of explicit gene expression information, embeddings obtained from peptidergic connectivity contain information about cell types. We speculate that cell clusters obtained with leiden clustering correspond to spatial domains relevant from a functional point of view.
 
 
 ### Gene Imputation
 
-We speculated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels). 
+We speculated that with more communication channels (more layers in the peptidergic multilayer graph), we should be able to distinguish between cells with higher accuracy (only 5 communication channels were available in the dataset out of 37 putative channels). To test this hypothesis, we tried gene imputation methods. Gene imputation methods can be used to recover the expression of peptidergic communication genes that were not part of the MERFISH dataset. Several tools have been benchmarked for this task [@li2022benchmarking], and we used the top performing model Tangram to impute values of all peptidergic communication genes. 
 
-To test this hypothesis, we tried gene imputation methods.
-
-Gene imputation methods can be used to recover the expression of peptidergic communication genes that were not part of the MERFISH dataset. Several tools have been benchmarked for this task [@li2022benchmarking], and we used the top performing model Tangram to impute values of all peptidergic communication genes. 
-
-Tangram maps cells from a scRNA-seq dataset to cells (or voxels) from a spatial transcriptomic dataset [@biancalani2021deep]. 
-
-Tangram learns a mapping matrix M defined such that $M_{ij} \geq 0$ is the probability of cell i (from scRNA-seq) mapping to cell $j$ (from spatial transcriptomic data). The loss function used to optimize M is shown below.
+Tangram maps cells from a scRNA-seq dataset to cells (or voxels) from a spatial transcriptomic dataset [@biancalani2021deep]. Tangram learns a mapping matrix M defined such that $M_{ij} \geq 0$ is the probability of cell i (from scRNA-seq) mapping to cell $j$ (from spatial transcriptomic data). The loss function used to optimize M is shown below.
 
 
 $$
@@ -303,9 +251,7 @@ We found that the correlation between imputed gene expression and actual gene ex
 
 ### Limitations and future work
 
-Only 5 out of the 37 cognate neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset, which precludes an assessment at more detailed levels of the taxonomy. 
-
-Neuron morphology may be an important consideration relevant for the full spatial extent of peptidergic communication. Arbor density representations derived from patch-seq datasets could offer a way forward. 
+Only 5 out of the 37 cognate neuropeptide precursor and GPCR pairs were experimentally measured in the MERFISH dataset, which precludes an assessment at more detailed levels of the taxonomy. Neuron morphology may be an important consideration relevant for the full spatial extent of peptidergic communication. Arbor density representations derived from patch-seq datasets could offer a way forward. 
 
 \
 
